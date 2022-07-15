@@ -1,0 +1,22 @@
+#!/usr/bin/python3.9
+
+import sys
+import os
+from multirun import grind_prog
+
+
+target_nginx = os.getenv('CBCH_NGINX')
+assert target_nginx is not None
+
+resroot = os.getenv('CBCH_RESROOT')
+assert resroot is not None
+
+
+args = [target_nginx] + sys.argv[1:]
+
+if sys.argv[1:] == ["-V"]:
+	# fast-track version checks
+	os.execv(target_nginx, args)
+
+else:
+	grind_prog(outdir=f'{resroot}/nginx/cfggrind', prefix='tests-', cmd=args, verbose=False, execve=True)
